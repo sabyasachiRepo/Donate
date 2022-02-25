@@ -25,4 +25,11 @@ public class DonateApplication {
         return WebClient.create("https://newsapi.org/v2");
     }
 
+
+    @Bean
+    @Qualifier("weatherAPI")
+    public WebClient weatherWebClient() {
+        return WebClient.create("http://api.airvisual.com/v2");
+    }
+
 }

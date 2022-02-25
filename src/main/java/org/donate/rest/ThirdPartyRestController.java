@@ -2,6 +2,7 @@ package org.donate.rest;
 import org.donate.entity.other.ConvertRateResponse;
 import org.donate.entity.other.CurrencyListResponse;
 import org.donate.entity.other.NewsResponse;
+import org.donate.entity.other.WeatherResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,10 @@ public class ThirdPartyRestController {
     @Autowired
     @Qualifier("newsAPI")
     private WebClient newsWebClient;
+
+    @Autowired
+    @Qualifier("weatherAPI")
+    private WebClient weatherWebClient;
 
     @GetMapping("/currencies/list")
     public CurrencyListResponse getCurrencyList() {
@@ -72,6 +77,25 @@ public class ThirdPartyRestController {
                 .bodyToMono(NewsResponse.class)
                 .block();
     }
+
+
+    @GetMapping("/current-weather")
+    public WeatherResponse getWeatherData(@RequestParam String lat,@RequestParam String lon) {
+        return weatherWebClient
+                .get()
+                .uri(uriBuilder ->
+                        uriBuilder
+                                .path("/nearest_city")
+                                .queryParam("lat",lat)
+                                .queryParam("lon",lon)
+                                .queryParam("key","57d3d692-f3af-465d-b06e-756037e25512")
+                                .build()
+                )
+                .retrieve()
+                .bodyToMono(WeatherResponse.class)
+                .block();
+    }
+
 
 
 }
